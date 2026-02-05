@@ -6,18 +6,66 @@ This provider manages Revos resources, such as Cube Overlays.
 
 ### 1. Configure the mirror
 
+You can configure the provider mirror either globally or per-project.
+
+#### Option A: Global configuration
+
 Add to `~/.terraformrc` (macOS/Linux) or `%APPDATA%\terraform.rc` (Windows):
 
 ```hcl
 provider_installation {
   network_mirror {
-    url = "https://revosai.github.io/terraform-provider-revos/"
+    url     = "https://revosai.github.io/terraform-provider-revos/"
     include = ["revosai/revos"]
   }
   direct {
     exclude = ["revosai/revos"]
   }
 }
+```
+
+#### Option B: Project-local configuration (recommended)
+
+Create a `mirror.tfrc` file in your Terraform project:
+
+```hcl
+provider_installation {
+  network_mirror {
+    url     = "https://revosai.github.io/terraform-provider-revos/"
+    include = ["revosai/revos"]
+  }
+  direct {
+    exclude = ["revosai/revos"]
+  }
+}
+```
+
+Then run Terraform with the config file:
+
+```bash
+# Set for single command
+TF_CLI_CONFIG_FILE=./mirror.tfrc terraform init
+
+# Or export for the session
+export TF_CLI_CONFIG_FILE=./mirror.tfrc
+terraform init
+terraform plan
+terraform apply
+```
+
+You can also add a Makefile for convenience:
+
+```makefile
+export TF_CLI_CONFIG_FILE := $(CURDIR)/mirror.tfrc
+
+init:
+	terraform init
+
+plan:
+	terraform plan
+
+apply:
+	terraform apply
 ```
 
 ### 2. Use the provider
