@@ -37,8 +37,8 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.tag }}"
 
-          mkdir -p revosai/revos
-          cd revosai/revos
+          mkdir -p registry.terraform.io/registry.terraform.io/revosai/revos
+          cd registry.terraform.io/registry.terraform.io/revosai/revos
 
           # Download all zip files from release
           gh release download "$VERSION" --repo "${{ github.repository }}" --pattern "*.zip"
@@ -51,7 +51,7 @@ jobs:
           VERSION="${{ steps.version.outputs.tag }}"
           VERSION_NUM="${VERSION#v}"
 
-          cd revosai/revos
+          cd registry.terraform.io/revosai/revos
 
           # Build platforms list for version.json
           PLATFORMS="{"
@@ -90,12 +90,12 @@ jobs:
 
           # Update index.json with all versions
           cd ../..
-          cat > revosai/revos/index.json << EOF
+          cat > registry.terraform.io/revosai/revos/index.json << EOF
           {
             "versions": {
           $(
             FIRST=true
-            for f in revosai/revos/*.json; do
+            for f in registry.terraform.io/revosai/revos/*.json; do
               FNAME=$(basename "$f" .json)
               if [ "$FNAME" != "index" ]; then
                 if [ "$FIRST" = true ]; then
