@@ -4,12 +4,30 @@ This provider manages Revos resources, such as Cube Overlays.
 
 ## Installation
 
+### 1. Configure the mirror
+
+Add to `~/.terraformrc` (macOS/Linux) or `%APPDATA%\terraform.rc` (Windows):
+
+```hcl
+provider_installation {
+  network_mirror {
+    url = "https://revosai.github.io/terraform-provider-revos/"
+    include = ["revosai/revos"]
+  }
+  direct {
+    exclude = ["revosai/revos"]
+  }
+}
+```
+
+### 2. Use the provider
+
 ```hcl
 terraform {
   required_providers {
     revos = {
       source  = "revosai/revos"
-      version = "~> 1.0"
+      version = "0.1.0"
     }
   }
 }

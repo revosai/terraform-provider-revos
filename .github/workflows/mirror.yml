@@ -1,0 +1,123 @@
+name: Update Mirror
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update-mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION_NUM="${VERSION#v}"  # Remove 'v' prefix
+
+          mkdir -p revosai/revos
+          cd revosai/revos
+
+          # Download all zip files from release
+          gh release download "$VERSION" --repo "${{ github.repository }}" --pattern "*.zip"
+
+          # Download checksums
+          gh release download "$VERSION" --repo "${{ github.repository }}" --pattern "*SHA256SUMS"
+
+      - name: Generate metadata
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION_NUM="${VERSION#v}"
+
+          cd revosai/revos
+
+          # Build platforms list for version.json
+          PLATFORMS="{"
+          FIRST=true
+          for zip in terraform-provider-revos_${VERSION_NUM}_*.zip; do
+            # Extract os_arch from filename
+            FILENAME=$(basename "$zip" .zip)
+            OS_ARCH=$(echo "$FILENAME" | sed "s/terraform-provider-revos_${VERSION_NUM}_//")
+            OS=$(echo "$OS_ARCH" | cut -d'_' -f1)
+            ARCH=$(echo "$OS_ARCH" | cut -d'_' -f2)
+
+            # Get SHA256 from checksums file
+            SHA=$(grep "$zip" *SHA256SUMS | awk '{print $1}')
+
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              PLATFORMS="$PLATFORMS,"
+            fi
+
+            PLATFORMS="$PLATFORMS
+              \"${OS}_${ARCH}\": {
+                \"hashes\": [\"zh:${SHA}\"],
+                \"url\": \"${zip}\"
+              }"
+          done
+          PLATFORMS="$PLATFORMS
+          }"
+
+          # Create version JSON
+          cat > "${VERSION_NUM}.json" << EOF
+          {
+            "archives": $PLATFORMS
+          }
+          EOF
+
+          # Update index.json with all versions
+          cd ../..
+          VERSIONS="["
+          FIRST=true
+          for f in revosai/revos/*.json; do
+            FNAME=$(basename "$f" .json)
+            # Skip index.json itself
+            if [ "$FNAME" != "index" ]; then
+              if [ "$FIRST" = true ]; then
+                FIRST=false
+              else
+                VERSIONS="$VERSIONS,"
+              fi
+              VERSIONS="$VERSIONS\"$FNAME\""
+            fi
+          done
+          VERSIONS="$VERSIONS]"
+
+          cat > revosai/revos/index.json << EOF
+          {
+            "versions": {
+          $(
+            FIRST=true
+            for f in revosai/revos/*.json; do
+              FNAME=$(basename "$f" .json)
+              if [ "$FNAME" != "index" ]; then
+                if [ "$FIRST" = true ]; then
+                  FIRST=false
+                else
+                  echo ","
+                fi
+                printf '    "%s": {}' "$FNAME"
+              fi
+            done
+          )
+            }
+          }
+          EOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update mirror for ${{ github.event.release.tag_name }}" || exit 0
+          git push
