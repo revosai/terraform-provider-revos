@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Terraform Provider Revos - Mirror</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+    h1 { color: #333; }
+    code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+    pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Terraform Provider Revos</h1>
+  <p>This is a Terraform provider network mirror for <a href="https://github.com/revosai/terraform-provider-revos">revosai/revos</a>.</p>
+
+  <h2>Installation</h2>
+  <p>Add to <code>~/.terraformrc</code>:</p>
+  <pre>provider_installation {
+  network_mirror {
+    url = "https://revosai.github.io/terraform-provider-revos/"
+    include = ["revosai/revos"]
+  }
+  direct {
+    exclude = ["revosai/revos"]
+  }
+}</pre>
+
+  <p>Then use in your Terraform config:</p>
+  <pre>terraform {
+  required_providers {
+    revos = {
+      source  = "revosai/revos"
+      version = "0.1.0"
+    }
+  }
+}</pre>
+
+  <h2>Available Versions</h2>
+  <ul>
+    <li><a href="https://github.com/revosai/terraform-provider-revos/releases/tag/v0.1.0">v0.1.0</a></li>
+  </ul>
+
+  <p><a href="https://github.com/revosai/terraform-provider-revos">View on GitHub</a></p>
+</body>
+</html>
