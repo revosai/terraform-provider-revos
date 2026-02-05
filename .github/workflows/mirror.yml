@@ -3,6 +3,11 @@ name: Update Mirror
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v0.1.0)'
+        required: true
 
 permissions:
   contents: write
@@ -17,12 +22,20 @@ jobs:
           ref: gh-pages
           fetch-depth: 0
 
+      - name: Set version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Download release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${{ github.event.release.tag_name }}"
-          VERSION_NUM="${VERSION#v}"  # Remove 'v' prefix
+          VERSION="${{ steps.version.outputs.tag }}"
 
           mkdir -p revosai/revos
           cd revosai/revos
@@ -35,7 +48,7 @@ jobs:
 
       - name: Generate metadata
         run: |
-          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${{ steps.version.outputs.tag }}"
           VERSION_NUM="${VERSION#v}"
 
           cd revosai/revos
@@ -77,22 +90,6 @@ jobs:
 
           # Update index.json with all versions
           cd ../..
-          VERSIONS="["
-          FIRST=true
-          for f in revosai/revos/*.json; do
-            FNAME=$(basename "$f" .json)
-            # Skip index.json itself
-            if [ "$FNAME" != "index" ]; then
-              if [ "$FIRST" = true ]; then
-                FIRST=false
-              else
-                VERSIONS="$VERSIONS,"
-              fi
-              VERSIONS="$VERSIONS\"$FNAME\""
-            fi
-          done
-          VERSIONS="$VERSIONS]"
-
           cat > revosai/revos/index.json << EOF
           {
             "versions": {
@@ -116,8 +113,9 @@ jobs:
 
       - name: Commit and push
         run: |
+          VERSION="${{ steps.version.outputs.tag }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Update mirror for ${{ github.event.release.tag_name }}" || exit 0
+          git commit -m "Update mirror for ${VERSION}" || exit 0
           git push
