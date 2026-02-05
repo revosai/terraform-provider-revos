@@ -5,8 +5,11 @@
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
     h1 { color: #333; }
+    h2 { color: #444; margin-top: 2em; }
+    h3 { color: #555; }
     code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
     pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    .note { background: #e8f4fd; border-left: 4px solid #1a73e8; padding: 10px 15px; margin: 15px 0; }
   </style>
 </head>
 <body>
@@ -14,10 +17,12 @@
   <p>This is a Terraform provider network mirror for <a href="https://github.com/revosai/terraform-provider-revos">revosai/revos</a>.</p>
 
   <h2>Installation</h2>
-  <p>Add to <code>~/.terraformrc</code>:</p>
+
+  <h3>Option A: Global configuration</h3>
+  <p>Add to <code>~/.terraformrc</code> (macOS/Linux) or <code>%APPDATA%\terraform.rc</code> (Windows):</p>
   <pre>provider_installation {
   network_mirror {
-    url = "https://revosai.github.io/terraform-provider-revos/"
+    url     = "https://revosai.github.io/terraform-provider-revos/"
     include = ["revosai/revos"]
   }
   direct {
@@ -25,7 +30,42 @@
   }
 }</pre>
 
-  <p>Then use in your Terraform config:</p>
+  <h3>Option B: Project-local configuration (recommended)</h3>
+  <p>Create a <code>mirror.tfrc</code> file in your Terraform project:</p>
+  <pre>provider_installation {
+  network_mirror {
+    url     = "https://revosai.github.io/terraform-provider-revos/"
+    include = ["revosai/revos"]
+  }
+  direct {
+    exclude = ["revosai/revos"]
+  }
+}</pre>
+
+  <p>Then run Terraform with the config file:</p>
+  <pre># Set for single command
+TF_CLI_CONFIG_FILE=./mirror.tfrc terraform init
+
+# Or export for the session
+export TF_CLI_CONFIG_FILE=./mirror.tfrc
+terraform init
+terraform plan</pre>
+
+  <div class="note">
+    <strong>Tip:</strong> Add a Makefile to your project for convenience:
+    <pre style="margin: 10px 0 0 0;">export TF_CLI_CONFIG_FILE := $(CURDIR)/mirror.tfrc
+
+init:
+	terraform init
+
+plan:
+	terraform plan
+
+apply:
+	terraform apply</pre>
+  </div>
+
+  <h2>Provider Configuration</h2>
   <pre>terraform {
   required_providers {
     revos = {
@@ -33,6 +73,10 @@
       version = "0.1.0"
     }
   }
+}
+
+provider "revos" {
+  # token via REVOSAI_TOKEN env var
 }</pre>
 
   <h2>Available Versions</h2>
