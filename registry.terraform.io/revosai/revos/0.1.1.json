@@ -1,0 +1,8 @@
+{
+  "archives": {
+    "*_*": {
+      "hashes": ["zh:"],
+      "url": "terraform-provider-revos_0.1.1_*.zip"
+    }
+}
+}
