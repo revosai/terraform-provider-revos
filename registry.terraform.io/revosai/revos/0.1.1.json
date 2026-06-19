@@ -1,8 +1,56 @@
 {
   "archives": {
-    "*_*": {
-      "hashes": ["zh:"],
-      "url": "terraform-provider-revos_0.1.1_*.zip"
+    "darwin_amd64": {
+      "hashes": ["zh:89559a03cedd343248d1d1ea495e6e7a3cc1415160475ae5c1182539e0f2af41"],
+      "url": "terraform-provider-revos_0.1.1_darwin_amd64.zip"
+    },
+    "darwin_arm64": {
+      "hashes": ["zh:e92cd699a0691da44793a8fbf9de6d26789d9aad64c4fa9948fa8267227842e9"],
+      "url": "terraform-provider-revos_0.1.1_darwin_arm64.zip"
+    },
+    "freebsd_386": {
+      "hashes": ["zh:8010fa8e4503a1a002b8c1fb3c28d572c449ba4ba96e0759417af232b66a7a2c"],
+      "url": "terraform-provider-revos_0.1.1_freebsd_386.zip"
+    },
+    "freebsd_amd64": {
+      "hashes": ["zh:979fcce71a5a01cdd793cb00cb395df5c3a5ab223dd42ef297fe5add912b2380"],
+      "url": "terraform-provider-revos_0.1.1_freebsd_amd64.zip"
+    },
+    "freebsd_arm": {
+      "hashes": ["zh:b3fcb6eceef2b1e376f2c50b3da5f6c335bbb31cffbdc8d2dd836aa1d4a61508"],
+      "url": "terraform-provider-revos_0.1.1_freebsd_arm.zip"
+    },
+    "freebsd_arm64": {
+      "hashes": ["zh:c08ac3752a9dc6cef5c72046e525c74366b89b7175700a9047a902d3a44b07c6"],
+      "url": "terraform-provider-revos_0.1.1_freebsd_arm64.zip"
+    },
+    "linux_386": {
+      "hashes": ["zh:ab811c2965de8ca9c5d79c460b74f20db7fec8bc44a50757483bfc2b2c822db3"],
+      "url": "terraform-provider-revos_0.1.1_linux_386.zip"
+    },
+    "linux_amd64": {
+      "hashes": ["zh:fb5aea1326f36265bb13eee0e19f0308fbe34fa50cb76ad557bf161c17c1a0b6"],
+      "url": "terraform-provider-revos_0.1.1_linux_amd64.zip"
+    },
+    "linux_arm": {
+      "hashes": ["zh:88350493bc0f6fa41039c6597c00f81ecbffb6e21b76655fa126c28db3f6a2da"],
+      "url": "terraform-provider-revos_0.1.1_linux_arm.zip"
+    },
+    "linux_arm64": {
+      "hashes": ["zh:d39fadb5307cb482e40e537de2b3d99cc954fa1559d214685e2d2031c057a37b"],
+      "url": "terraform-provider-revos_0.1.1_linux_arm64.zip"
+    },
+    "windows_386": {
+      "hashes": ["zh:a473cc290479fbb82e8a2672a8b714a23c78b8c7b00a70cc29fed74f97ed371e"],
+      "url": "terraform-provider-revos_0.1.1_windows_386.zip"
+    },
+    "windows_amd64": {
+      "hashes": ["zh:f748dec870edae2d301629e694ba9fb15a8b65ddb20675a41bcc42788649e95e"],
+      "url": "terraform-provider-revos_0.1.1_windows_amd64.zip"
+    },
+    "windows_arm64": {
+      "hashes": ["zh:f949d1ad2d2a1ec1a5d143b720ad244dde5040a5f3a217a2e943441f28be594c"],
+      "url": "terraform-provider-revos_0.1.1_windows_arm64.zip"
     }
-}
+  }
 }
