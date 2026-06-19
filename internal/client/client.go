@@ -85,7 +85,7 @@ func (c *Client) request(method, path string, body interface{}) ([]byte, error) 
 
 // GetOverlay retrieves an overlay by ID
 func (c *Client) GetOverlay(id string) (*CubeOverlay, error) {
-	body, err := c.request("GET", fmt.Sprintf("/cube-overlays/%s", id), nil)
+	body, err := c.request("GET", fmt.Sprintf("/overlays/%s", id), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func (c *Client) GetOverlay(id string) (*CubeOverlay, error) {
 
 // CreateOverlay creates a new overlay
 func (c *Client) CreateOverlay(payload OverlayPayload) (*CubeOverlay, error) {
-	body, err := c.request("POST", "/cube-overlays", payload)
+	body, err := c.request("POST", "/overlays", payload)
 	if err != nil {
 		return nil, err
 	}
@@ -138,7 +138,7 @@ func (c *Client) CreateOverlay(payload OverlayPayload) (*CubeOverlay, error) {
 
 // UpdateOverlay updates an existing overlay
 func (c *Client) UpdateOverlay(id string, payload OverlayPayload) (*CubeOverlay, error) {
-	body, err := c.request("PATCH", fmt.Sprintf("/cube-overlays/%s", id), payload)
+	body, err := c.request("PATCH", fmt.Sprintf("/overlays/%s", id), payload)
 	if err != nil {
 		return nil, err
 	}
@@ -159,13 +159,13 @@ func (c *Client) UpdateOverlay(id string, payload OverlayPayload) (*CubeOverlay,
 
 // DeleteOverlay deletes an overlay
 func (c *Client) DeleteOverlay(id string) error {
-	_, err := c.request("DELETE", fmt.Sprintf("/cube-overlays/%s", id), nil)
+	_, err := c.request("DELETE", fmt.Sprintf("/overlays/%s", id), nil)
 	return err
 }
 
 // ListOverlays retrieves all overlays
 func (c *Client) ListOverlays() ([]CubeOverlay, error) {
-	body, err := c.request("GET", "/cube-overlays", nil)
+	body, err := c.request("GET", "/overlays", nil)
 	if err != nil {
 		return nil, err
 	}
