@@ -41,10 +41,10 @@ jobs:
           cd registry.terraform.io/registry.terraform.io/revosai/revos
 
           # Download all zip files from release
-          gh release download "$VERSION" --repo "${{ github.repository }}" --pattern "*.zip"
+          gh release download "$VERSION" --repo "${{ github.repository }}" --pattern "*.zip" --clobber
 
           # Download checksums
-          gh release download "$VERSION" --repo "${{ github.repository }}" --pattern "*SHA256SUMS"
+          gh release download "$VERSION" --repo "${{ github.repository }}" --pattern "*SHA256SUMS" --clobber
 
       - name: Generate metadata
         run: |
